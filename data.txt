@@ -1,0 +1,50 @@
+Newtown Square
+{
+CREEK
+{
+Bluegill
+.1 2.1 20 COMMON
+Largemouth Bass
+1 8 30 UNCOMMON
+Brook Trout
+2 15 25 UNCOMMON
+Rainbow Trout
+2 15 50 RARE
+Koi
+1 10 200 EXOTIC
+Cthulhu
+5000 25000 500 MYTHIC
+}
+LAKE
+{
+Catfish
+1.5 15 35 COMMON
+Bunger
+.25 2 8.99 UNCOMMON
+}
+}
+Ocean City
+{
+OCEAN
+{
+Tuna
+300 2000 10 RARE
+Sea Bass
+.5 3 20 UNCOMMON
+Spot
+.5 3 10 COMMON
+Blacktip Shark
+5 50 8 RARE
+Horseshore Crab
+.5 5 55 RARE
+}
+BAY
+{
+Crab
+.1 .8 75 RARE
+Shmeckle
+5 5 5 LEGENDARY
+Flounder
+1 4 25 UNCOMMON
+}
+}
