@@ -135,11 +135,15 @@ public class FishingModelImpl implements FishingModel {
   }
 
   private int getRarityDivider() {
-    if (this.lure == Lure.RARER_FISH1) {
-      return 2;
-    }
-    else {
-      return 1;
+    switch (this.lure) {
+      case RARER_FISH1:
+        return 2;
+      case RARER_FISH2:
+        return 4;
+      case RARER_FISH3:
+        return 8;
+      default:
+        return 1;
     }
   }
 
@@ -185,12 +189,27 @@ public class FishingModelImpl implements FishingModel {
       e.printStackTrace();
     }
     Species s = this.getRandomFishByLocation();
-    double weight = (s.getMinWeight() + ((s.getMaxWeight() - s.getMinWeight()) * this.rodLevel / 100));
+    double weight = this.calculatwWeight(s);
     int cost = (int) Math.round(s.getCost(weight));
     Fish f = new Fish(s.getSpecies(), weight, cost);
     this.updateLure();
     this.updateAlmanac(f.getName());
     return f;
+  }
+
+  private double calculatwWeight(Species s) {
+    double difference = s.getMaxWeight() - s.getMinWeight();
+    double base = s.getMinWeight() + (difference * this.rodLevel / 100);
+    switch(this.lure) {
+      case BIGGER_FISH1:
+        return base * 1.25;
+      case BIGGER_FISH2:
+        return base * 1.5;
+      case BIGGER_FISH3:
+        return base * 2;
+      default:
+        return base;
+    }
   }
 
   private void updateLure() {
@@ -207,13 +226,19 @@ public class FishingModelImpl implements FishingModel {
   }
 
   private long getWaitTime() {
-    int additive = 100 - (this.rodLevel * 100);
-    if (this.lure == Lure.FASTER_BITES1) {
-      additive = 2500 - (this.rodLevel * 25);
+    int base = 5000 - (this.rodLevel * 50);
+    //Random rand = new Random(); TODO: re-add randomization of wait times
+    //base -= rand.nextInt(100);
+    switch (this.lure) {
+      case FASTER_BITES1:
+        return Math.round(base * .75);
+      case FASTERBITES2:
+        return Math.round(base * .5);
+      case FASTERBITES3:
+        return Math.round(base * .25);
+      default:
+        return base;
     }
-    Random rand = new Random();
-    int rando = rand.nextInt(50) + additive;
-    return rando;
   }
 
   @Override

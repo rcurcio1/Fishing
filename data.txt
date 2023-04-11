@@ -48,3 +48,11 @@ Flounder
 1 4 25 UNCOMMON
 }
 }
+Boston
+{
+OCEAN
+{
+Lobstah
+2 8 20 RARE
+}
+}
