@@ -160,38 +160,41 @@ public class FishingControllerImpl implements FishingController {
         case 0:
           break;
         case 1:
-          if(this.model.getRodLevel() >= 100) {
-            this.view.renderMessage("Max rod level reached.");
-          }
-          else if(this.model.getMoney() >= Math.round(Math.pow(this.model.getRodLevel(), 2) * 100)) {
-            this.model.changeMoney((int) Math.round(Math.pow(this.model.getRodLevel(), 2) * -100));
-            this.model.upgradeRod();
-          }
-          else {
-            this.view.renderMessage("Sorry, you do not have enough money to purchase that.");
-          }
+          this.upgradeRodLevel();
           break;
-        case 2:
-          if (this.model.getMoney() >= 75) {
-            this.model.setLure(Lure.FASTER_BITES1, 10);
-            this.model.changeMoney(-75);
-          }
-          else {
-            this.view.renderMessage("Sorry, you do not have enough money to purchase that.");
-          }
-          break;
-        case 3:
-          if (this.model.getMoney() >= 125) {
-            this.model.setLure(Lure.RARER_FISH1, 10);
-            this.model.changeMoney(-125);
-          }
-          else {
-            this.view.renderMessage("Sorry, you do not have enough money to purchase that.");
-          }
         default:
-          this.view.renderMessage("Invalid input.");
+          this.buyLures(input);
           break;
       }
+    }
+  }
+
+  private void upgradeRodLevel() {
+    if(this.model.getRodLevel() >= 100) {
+      this.view.renderMessage("Max rod level reached.");
+    }
+    else if(this.model.getMoney() >= Math.round(Math.pow(this.model.getRodLevel(), 2) * 100)) {
+      this.model.changeMoney((int) Math.round(Math.pow(this.model.getRodLevel(), 2) * -100));
+      this.model.upgradeRod();
+    }
+    else {
+      this.view.renderMessage("Sorry, you do not have enough money to purchase that.");
+    }
+  }
+
+  private void buyLures(int input) {
+    List<Lure> activeLures = this.model.getActiveLureOfferings();
+    if (input > activeLures.size() + 1 || input < 1) {
+      this.view.renderMessage("Invalid input.");
+      return;
+    }
+    Lure requestedLure = activeLures.get(input);
+    if (this.model.getMoney() >= requestedLure.getPrice()) {
+      this.model.setLure(requestedLure, 10);
+      this.model.changeMoney(-1 * requestedLure.getPrice());
+    }
+    else {
+      this.view.renderMessage("Sorry, you do not have enough money to purchase that.");
     }
   }
 }

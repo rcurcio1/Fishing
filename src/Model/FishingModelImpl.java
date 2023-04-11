@@ -207,12 +207,12 @@ public class FishingModelImpl implements FishingModel {
   }
 
   private long getWaitTime() {
-    int additive = 10000 - (this.rodLevel * 100);
+    int additive = 100 - (this.rodLevel * 100);
     if (this.lure == Lure.FASTER_BITES1) {
       additive = 2500 - (this.rodLevel * 25);
     }
     Random rand = new Random();
-    int rando = rand.nextInt(5000) + additive;
+    int rando = rand.nextInt(50) + additive;
     return rando;
   }
 
