@@ -39,6 +39,18 @@ public class FishingModelImpl implements FishingModel {
     this.waterType = waterType;
   }
 
+  public FishingModelImpl(FishingModelImpl model) {
+    this.money = model.getMoney();
+    this.location = model.getLocation();
+    this.rodLevel = model.getRodLevel();
+    this.inventory = model.getInventory();
+    this.waterType = model.getWaterType();
+    this.fishLocations = model.getFishLocation();
+    this.almanac = model.getAlmanac();
+    this.lure = model.getLure();
+    this.lureDuration = model.getLureDuration();
+  }
+
   @Override
   public void addFishToInventory(Fish f) {
     this.inventory.add(f);
@@ -95,6 +107,10 @@ public class FishingModelImpl implements FishingModel {
     return false;
   }
 
+  public FishLocations getFishLocation() {
+    return this.fishLocations;
+  }
+
   @Override
   public Species getRandomFishByLocation() {
     List<Species> options = new ArrayList<Species>();
@@ -119,7 +135,7 @@ public class FishingModelImpl implements FishingModel {
   }
 
   private int getRarityDivider() {
-    if (this.lure == Lure.RARER_FISH) {
+    if (this.lure == Lure.RARER_FISH1) {
       return 2;
     }
     else {
@@ -192,7 +208,7 @@ public class FishingModelImpl implements FishingModel {
 
   private long getWaitTime() {
     int additive = 10000 - (this.rodLevel * 100);
-    if (this.lure == Lure.FASTER_BITES) {
+    if (this.lure == Lure.FASTER_BITES1) {
       additive = 2500 - (this.rodLevel * 25);
     }
     Random rand = new Random();
@@ -224,5 +240,17 @@ public class FishingModelImpl implements FishingModel {
       this.lureDuration = duration;
     }
     this.lure = lure;
+  }
+
+  @Override
+  public List<Lure> getActiveLureOfferings() {
+    Lure[] allLures = Lure.values();
+    List<Lure> activeLureOfferings = new ArrayList<>();
+    for (Lure l: allLures) {
+      if (l.getRodLevelUnlocked() <= this.rodLevel && l.getRodLevelUnlocked() != 0) {
+        activeLureOfferings.add(l);
+      }
+    }
+    return activeLureOfferings;
   }
 }

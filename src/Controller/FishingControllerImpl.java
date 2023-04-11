@@ -173,7 +173,7 @@ public class FishingControllerImpl implements FishingController {
           break;
         case 2:
           if (this.model.getMoney() >= 75) {
-            this.model.setLure(Lure.FASTER_BITES, 10);
+            this.model.setLure(Lure.FASTER_BITES1, 10);
             this.model.changeMoney(-75);
           }
           else {
@@ -182,7 +182,7 @@ public class FishingControllerImpl implements FishingController {
           break;
         case 3:
           if (this.model.getMoney() >= 125) {
-            this.model.setLure(Lure.RARER_FISH, 10);
+            this.model.setLure(Lure.RARER_FISH1, 10);
             this.model.changeMoney(-125);
           }
           else {

@@ -15,18 +15,3 @@ public class FishingMain {
     controller.playGame();
   }
 }
-
-/* IDEAS
- *     
- * Cost to travel to new location
- * 
- * Possibility to catch junk / special locational items
- * 
- * Lure ideas
- * -Rarer fish
- * -Larger fish
- *
- *
- * Create a state class so that the game can be started paused and then started from the same place
- * 
- */

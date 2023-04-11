@@ -2,11 +2,13 @@ package View;
 
 import Model.Fish;
 import Model.FishingModel;
+import Model.Lure;
 import Model.Water;
 
 import java.io.IOException;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class FishingTextView implements FishingView {
@@ -69,12 +71,22 @@ public class FishingTextView implements FishingView {
         "~ ~ ~ ~ ~ EQUIPMENT SHOP ~ ~ ~ ~ ~ \n" +
             "Bank: " + this.model.getMoney() + "\n" +
             "Current Rod Level: " + this.model.getRodLevel() + "\n" +
-            "Current Lure: " + this.model.getLure() + " (duration " + this.model.getLureDuration() + ")\n" +
+            "Current Lure: " + this.model.getLure().getName() + " (duration " + this.model.getLureDuration() + ")\n" +
             "0. Exit\n" +
             "1. Upgrade Rod Cost: " + ((int) Math.round(Math.pow(this.model.getRodLevel(), 2) * 100)) + "\n" +
-            "2. Buy Faster Bites Lure (duration 10): 75\n" +
-            "3. Buy Rarer Fish Lure (duration 10): 125\n" +
+            this.renderLureOfferings() +
             "What would you like to buy? ");
+  }
+
+  private String renderLureOfferings() {
+    List<Lure> lureOfferings = this.model.getActiveLureOfferings();
+    String lureString = "";
+    int i = 2;
+    for (Lure lure: lureOfferings) {
+      lureString = lureString + i + ". Buy " + lure.getName() + " (duration 10): " + lure.getPrice() + "\n";
+      i++;
+    }
+    return lureString;
   }
 
   @Override
@@ -121,6 +133,7 @@ public class FishingTextView implements FishingView {
 
   public void renderAlmanac() {
     Map<String, Map<Water, Map<String, Boolean>>> almanac = this.model.getAlmanac();
+    double numCaught = 0;
     for (String loc : almanac.keySet()) {
       this.renderMessage(loc);
       for (Water water: almanac.get(loc).keySet()) {
@@ -128,6 +141,7 @@ public class FishingTextView implements FishingView {
         for (String spec: almanac.get(loc).get(water).keySet()) {
           if (almanac.get(loc).get(water).get(spec)) {
             this.renderMessage("        " + spec);
+            numCaught += 1;
           }
           else {
             this.renderMessage("        ???");
@@ -135,5 +149,7 @@ public class FishingTextView implements FishingView {
         }
       }
     }
+    double percentCaught = numCaught / 16;
+    this.renderMessage("PROGRESS: " + (percentCaught * 100) + "%");
   }
 }

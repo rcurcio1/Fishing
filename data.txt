@@ -35,7 +35,7 @@ Spot
 .5 3 10 COMMON
 Blacktip Shark
 5 50 8 RARE
-Horseshore Crab
+Horseshoe Crab
 .5 5 55 RARE
 }
 BAY

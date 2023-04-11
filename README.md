@@ -12,3 +12,10 @@ A fishing game where one can travel to different locations, each with specific s
 4. Create a state class so that the game can be started paused and then started from the same place
 5. Unlock medals for catching all fish in location, certain achievements, etc 
 6. "Final boss" type fish unlocked in location when all other fish are caught
+7. Story Aspects
+    * Lore
+    * Books to catch and read
+8. Other types of bait
+    * Craft lures
+    * Catch lures
+    * Use fish you caught as bait
