@@ -1,7 +1,7 @@
 package SpeciesInfo;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,17 +20,17 @@ public class FishLocations {
         this.speciesLocations = new HashMap<String, List<Species>>();
         this.waterLocations = new HashMap<String, List<Water>>();
         this.locations = new ArrayList<String>();
-        this.readFile(FISH_FILE);
-    }
-
-    private void readFile(String f) {
-        File data = new File(f);
-        Scanner fs = new Scanner(System.in);
         try {
-            fs = new Scanner(data);
-        } catch (FileNotFoundException e) {
+            this.readFile(FISH_FILE);
+        }
+        catch(IOException e) {
             System.out.println("File not found :/\n");
         }
+    }
+
+    private void readFile(String f) throws IOException{
+        File data = new File(f);
+        Scanner fs = new Scanner(data);
         boolean inLocation = false;
         boolean inWater = false;
         while (fs.hasNextLine()) {
@@ -69,6 +69,7 @@ public class FishLocations {
             }
             this.waterLocations.put(location, waters);
         }
+        fs.close();
     }
 
     public Map<String, List<Species>> getFishLocations() {

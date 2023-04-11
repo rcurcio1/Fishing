@@ -10,6 +10,7 @@ A fishing game where one can travel to different locations, each with specific s
     * ~~Rarer fish~~
     * ~~Larger fish~~
 4. Create a state class so that the game can be started paused and then started from the same place
+    * Ability to save state as a json object, then load the state and play from there
 5. Unlock medals for catching all fish in location, certain achievements, etc 
 6. "Final boss" type fish unlocked in location when all other fish are caught
 7. Story Aspects
