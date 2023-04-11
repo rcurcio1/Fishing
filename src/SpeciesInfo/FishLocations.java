@@ -98,4 +98,12 @@ public class FishLocations {
         }
         return almanac;
     }
+
+    public int getNumSpecies() {
+        int count = 0;
+        for (String loc : this.speciesLocations.keySet()) {
+            count += this.speciesLocations.get(loc).size();
+        }
+        return count;
+   }
 }

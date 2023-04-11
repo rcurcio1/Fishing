@@ -278,4 +278,10 @@ public class FishingModelImpl implements FishingModel {
     }
     return activeLureOfferings;
   }
+
+  @Override
+  public int getNumCatchableFish() {
+    return this.fishLocations.getNumSpecies();
+  }
+
 }

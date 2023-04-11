@@ -149,7 +149,7 @@ public class FishingTextView implements FishingView {
         }
       }
     }
-    double percentCaught = numCaught / 16;
+    double percentCaught = numCaught / this.model.getNumCatchableFish();
     this.renderMessage("PROGRESS: " + (percentCaught * 100) + "%");
   }
 }

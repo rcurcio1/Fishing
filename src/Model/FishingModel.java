@@ -53,4 +53,6 @@ public interface FishingModel {
   Map<String, Map<Water, Map<String, Boolean>>> getAlmanac();
 
   List<Lure> getActiveLureOfferings();
+
+  int getNumCatchableFish();
 }

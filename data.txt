@@ -54,5 +54,7 @@ OCEAN
 {
 Lobstah
 2 8 20 RARE
+Cod
+3 10 5 COMMON
 }
 }
