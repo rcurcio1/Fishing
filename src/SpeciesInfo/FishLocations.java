@@ -100,6 +100,10 @@ public class FishLocations {
         return almanac;
     }
 
+    public List<Water> getWaterForLocation(String location) {
+        return this.waterLocations.get(location);
+    }
+
     public int getNumSpecies() {
         int count = 0;
         for (String loc : this.speciesLocations.keySet()) {

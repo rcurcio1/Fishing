@@ -21,4 +21,4 @@ A fishing game where one can travel to different locations, each with specific s
     * Catch lures
     * Use fish you caught as bait
 9. Keep track of the record size for each species
-10. Ability to choose location and water type using integer input
+10. ~~Ability to choose location and water type using integer input~~

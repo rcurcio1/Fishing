@@ -6,8 +6,6 @@ import Model.Lure;
 import Model.Water;
 
 import java.io.IOException;
-
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -37,21 +35,18 @@ public class FishingTextView implements FishingView {
   }
 
   @Override
-  public void renderLocations() throws IOException {
-    Iterator<String> keys = this.model.getFishLocations().keySet().iterator();
-    int i = 1;
-    while (keys.hasNext()) {
-      this.ap.append("" + i + ". " + keys.next() + "\n");
-      i++;
-    }    
+  public void renderLocations() {
+    List<String> locations = this.model.getLocations();
+    for (int i = 1; i <= locations.size(); i++) {
+       this.renderMessage("" + i + ". " + locations.get(i-1)); 
+    }
   }
 
   @Override
-  public void renderWaterTypes(String location) throws IOException {
-    int i = 1;
-    for (Water w : this.model.getWaterLocations(location)) {
-      this.ap.append("" + i + ". " + w + "\n");
-      i++;
+  public void renderWaterTypes(String location)  {
+    List<Water> water = this.model.getWaterLocations(location);
+    for (int i = 1; i <= water.size(); i++) {
+      this.renderMessage("" + i + ". " + water.get(i-1));
     }    
   }
 
@@ -112,12 +107,16 @@ public class FishingTextView implements FishingView {
   @Override
   public void renderChangeLocationMenu() {
     this.renderMessage("~ ~ ~ ~ ~ LOCATIONS ~ ~ ~ ~ ~");
-    try {
-      this.renderLocations();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    this.renderMessage("Enter the name of the location you would like to travel to: ");
+    this.renderMessage("0. Exit");
+    this.renderLocations();
+    this.renderMessage("Enter the number of the location you would like to travel to: ");
+  }
+
+  public void renderChangeWaterMenu(String location) {
+    this.renderMessage("~ ~ ~ ~ ~ WATER TYPES ~ ~ ~ ~ ~");
+    this.renderMessage("0. Exit");
+    this.renderWaterTypes(location);
+    this.renderMessage("Enter the number of the water type you would like to travel to: ");
   }
 
   @Override

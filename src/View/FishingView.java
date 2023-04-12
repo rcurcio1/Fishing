@@ -10,7 +10,7 @@ public interface FishingView {
 
   void renderLocations() throws IOException;
 
-  void renderWaterTypes(String location) throws IOException;
+  void renderWaterTypes(String location);
 
   void renderInventory() throws IOException;
 
@@ -21,6 +21,8 @@ public interface FishingView {
   void renderGoFishMenu();
 
   void renderChangeLocationMenu();
+
+  void renderChangeWaterMenu(String location);
 
   void renderMainMenu();
 

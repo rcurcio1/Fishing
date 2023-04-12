@@ -59,43 +59,46 @@ public class FishingControllerImpl implements FishingController {
   }
 
   private void changeLocation(Scanner scan) {
-    String input = "";
-    String water = "";
-  
-    while(!input.equals("Exit")) {
+    int locationIndex = -1;
+    String location = "";
+    Water water = null;
+    List<String> locations = this.model.getLocations();
+    while(locationIndex != 0) {
       this.view.renderChangeLocationMenu();
-      input = scan.nextLine();
-      input.replaceAll("\\n", "");
-      List<Species> newSpecies = this.model.getFishLocations().getOrDefault(input, new ArrayList<Species>());
-      if (input.equals("Exit")) {
-        break;
+      locationIndex = scan.nextInt();
+      if (locationIndex > 0 && locationIndex <= locations.size()) {
+        location = locations.get(locationIndex - 1);
+        water = this.changeWater(location, scan);
+        if (water == null) {
+          locationIndex = 0;
+          continue;
+        }
+        else {
+          this.model.setLocation(location);
+          this.model.setWater(water);
+          return;
+        }
       }
-      else if (newSpecies.size() == 0) {
-        this.view.renderMessage("Invalid input.");
+      else if (locationIndex == 0) {
+        continue;
       }
       else {
-        this.model.setLocation(input);
-        try {
-          this.view.renderWaterTypes(input);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-        this.view.renderMessage("Enter the name of the water you would like to travel to: ");
-        water = scan.next().toUpperCase();
-        try {
-          if (this.model.getWaterLocations(input).contains(Water.valueOf(water))) {
-            this.model.setWater(water);
-            return;
-          }
-          else {
-            this.view.renderMessage("Invalid input.");
-          }
-        }
-        catch (Exception e) {
-          this.view.renderMessage("Invalid input");
-        }
+        this.view.renderMessage("Invalid input.");
       }
     }
+  }
+
+  private Water changeWater(String location, Scanner scan) {
+    int waterIndex = -1;
+    List<Water> waters = this.model.getWaterLocations(location);
+    while (waterIndex != 0) {
+      this.view.renderChangeWaterMenu(location);
+      waterIndex = scan.nextInt();
+      if (waterIndex > 0 && waterIndex <= waters.size()) {
+        return waters.get(waterIndex - 1);
+      }
+    }
+    return null;
   }
 
   private void goFish(Scanner scan) {

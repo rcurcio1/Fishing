@@ -7,6 +7,10 @@ import java.io.InputStreamReader;
 
 public class FishingMain {
   public static void main(String[] args) {
+    if (args.length > 0) {
+      String filename = args[0];
+
+    }
     FishingModel model = new FishingModel();
     FishingView view = new FishingTextView(model);
     FishingController controller = new FishingControllerImpl(model, view,

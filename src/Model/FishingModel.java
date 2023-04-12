@@ -173,12 +173,15 @@ public class FishingModel {
 
   
   public List<Water> getWaterLocations(String location) {
-    return this.fishLocations.getWaterLocations().get(location);
+    return this.fishLocations.getWaterForLocation(location);
   }
 
+  public List<String> getLocations() {
+    return this.fishLocations.getLocations();
+  }
   
-  public void setWater(String s) {
-    this.waterType = Water.valueOf(s);    
+  public void setWater(Water w) {
+    this.waterType = w;  
   }
 
   
