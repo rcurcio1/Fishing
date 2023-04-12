@@ -1,9 +1,9 @@
 package Controller;
 
 import Model.Fish;
-import Model.FishingModel;
 import Model.Lure;
 import Model.Water;
+import Model.FishingModel;
 import SpeciesInfo.Species;
 import View.FishingView;
 
