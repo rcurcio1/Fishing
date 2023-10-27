@@ -24,6 +24,8 @@ public interface FishingView {
 
   void renderChangeWaterMenu(String location);
 
+  void renderSaveStateMenu();
+
   void renderMainMenu();
 
   void renderAlmanac();

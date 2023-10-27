@@ -4,13 +4,13 @@ import Model.Fish;
 import Model.Lure;
 import Model.Water;
 import Model.FishingModel;
-import SpeciesInfo.Species;
 import View.FishingView;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import com.google.gson.JsonIOException;
 
 public class FishingControllerImpl implements FishingController {
   private FishingModel model;
@@ -51,11 +51,28 @@ public class FishingControllerImpl implements FishingController {
         case 5:
           this.view.renderAlmanac();
           break;
+        case 6:
+          this.saveState(scan);
         default:
           this.view.renderMessage("Invalid input.");
           break;
       }
     }
+  }
+
+  private void saveState(Scanner scan) {
+    this.view.renderSaveStateMenu();
+    String filename = scan.next();
+    try {
+      this.model.saveState(filename);
+    } catch (JsonIOException e) {
+      this.view.renderMessage("Json Error: unable to save state");
+      return;
+    } catch (IOException e) {
+      this.view.renderMessage("IO Error: unable to save state");
+      return;
+    }
+    this.view.renderMessage("State saved successfully!");
   }
 
   private void changeLocation(Scanner scan) {
@@ -144,8 +161,14 @@ public class FishingControllerImpl implements FishingController {
           }
           this.view.renderMessage("Enter the number of the fish you would like to sell");
           input = scan.nextInt();
-          this.model.changeMoney(this.model.getInventory().get(input - 1).getWorth());
-          this.model.removeFishFromInventory(input - 1);
+          if (input > 0 && input <= this.model.getInventory().size()) {
+            this.model.changeMoney(this.model.getInventory().get(input - 1).getWorth());
+            this.model.removeFishFromInventory(input - 1);
+          }
+          else {
+            this.view.renderMessage("Invalid input.");
+          }
+          input = -1;
           break;
         default:
           this.view.renderMessage("Invalid input.");
@@ -191,7 +214,7 @@ public class FishingControllerImpl implements FishingController {
       this.view.renderMessage("Invalid input.");
       return;
     }
-    Lure requestedLure = activeLures.get(input);
+    Lure requestedLure = activeLures.get(input - 2);
     if (this.model.getMoney() >= requestedLure.getPrice()) {
       this.model.setLure(requestedLure, 10);
       this.model.changeMoney(-1 * requestedLure.getPrice());

@@ -2,104 +2,83 @@ package Model;
 
 import SpeciesInfo.FishLocations;
 import SpeciesInfo.Species;
+
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+
 public class FishingModel {
-  private int money;
-  private String location;
-  private int rodLevel;
-  private List<Fish> inventory;
-  private Water waterType;
+  private final int WAIT_TIME = 5000;
   private FishLocations fishLocations;
-  private Lure lure;
-  private int lureDuration;
-  private Map<String, Map<Water, Map<String, Boolean>>> almanac;
+  private FishingState state;
 
   public FishingModel() {
-    this.money = 0;
-    this.location = "Newtown Square";
-    this.rodLevel = 1;
-    this.inventory = new ArrayList<Fish>();
-    this.waterType = Water.CREEK;
     this.fishLocations = new FishLocations();
-    this.almanac = this.fishLocations.makeAlmanac();
-    this.lure = Lure.NO_LURE;
-    this.lureDuration = 0;
+    this.state = new FishingState(this.fishLocations);
   }
 
-  public FishingModel(int money, String location, int rodLevel, ArrayList<Fish> inventory,
-      Water waterType) {
-    this.money = money;
-    this.location = location;
-    this.rodLevel = rodLevel;
-    this.inventory = inventory;
-    this.waterType = waterType;
+  public FishingModel(String filename) throws FileNotFoundException {
+    this.fishLocations = new FishLocations();
+    this.state = new FishingState(this.fishLocations, filename);
   }
-
-  public FishingModel(FishingModel model) {
-    this.money = model.getMoney();
-    this.location = model.getLocation();
-    this.rodLevel = model.getRodLevel();
-    this.inventory = model.getInventory();
-    this.waterType = model.getWaterType();
-    this.fishLocations = model.getFishLocation();
-    this.almanac = model.getAlmanac();
-    this.lure = model.getLure();
-    this.lureDuration = model.getLureDuration();
-  }
-
   
   public void addFishToInventory(Fish f) {
-    this.inventory.add(f);
+    this.state.addToInventory(f);
   }
 
   
   public void changeLocation(String location, Water w) {
-    this.location = location;
-    this.waterType = w;
+    this.state.setLocation(location);
+    this.state.setWaterType(w);
   }
 
   
   public void upgradeRod() {
-    this.rodLevel ++;
+    this.state.setRodLevel(this.state.getRodLevel() + 1);
   }
 
   
   public void changeMoney(int d) {
-    this.money += d;
+    this.state.setMoney(this.state.getMoney() + d);
   }
 
   
   public int getMoney() {
-    return this.money;
+    return this.state.getMoney();
   }
 
   
   public List<Fish> getInventory() {
-    return this.inventory;
+    return this.state.getInventory();
   }
 
   
   public void removeFishFromInventory(int i) {
-    this.inventory.remove(i);
+    this.state.removeFromInventory(i);
   }
 
   
   public int getRodLevel() {
-    return this.rodLevel;
+    return this.state.getRodLevel();
   }
 
   
   public String getLocation() {
-    return this.location;
+    return this.state.getLocation();
   }
 
   
   public Water getWaterType() {
-    return this.waterType;
+    return this.state.getWaterType();
   }
 
   
@@ -114,8 +93,8 @@ public class FishingModel {
   
   public Species getRandomFishByLocation() {
     List<Species> options = new ArrayList<Species>();
-    for (Species s: this.fishLocations.getFishLocations().get(this.location)) {
-      if (s.getWaterType() == this.waterType) {
+    for (Species s: this.fishLocations.getFishLocations().get(this.getLocation())) {
+      if (s.getWaterType() == this.getWaterType()) {
         options.add(s);
       }
     }
@@ -135,7 +114,7 @@ public class FishingModel {
   }
 
   private int getRarityDivider() {
-    switch (this.lure) {
+    switch (this.getLure()) {
       case RARER_FISH1:
         return 2;
       case RARER_FISH2:
@@ -150,7 +129,7 @@ public class FishingModel {
   
   public int getInventoryCost() {
     int cost = 0;
-    for (Fish f: this.inventory) {
+    for (Fish f: this.getInventory()) {
       cost += f.getWorth();
     }
     return cost;
@@ -158,7 +137,7 @@ public class FishingModel {
 
   
   public void emptyInventory() {
-    this.inventory = new ArrayList<Fish>();    
+    this.state.setInventory(new ArrayList<Fish>());    
   }
 
   
@@ -168,7 +147,7 @@ public class FishingModel {
 
   
   public void setLocation(String l) {
-    this.location = l;
+    this.state.setLocation(l);
   }
 
   
@@ -181,7 +160,7 @@ public class FishingModel {
   }
   
   public void setWater(Water w) {
-    this.waterType = w;  
+    this.state.setWaterType(w);  
   }
 
   
@@ -202,8 +181,8 @@ public class FishingModel {
 
   private double calculatwWeight(Species s) {
     double difference = s.getMaxWeight() - s.getMinWeight();
-    double base = s.getMinWeight() + (difference * this.rodLevel / 100);
-    switch(this.lure) {
+    double base = s.getMinWeight() + (difference * this.getRodLevel() / 100);
+    switch(this.getLure()) {
       case BIGGER_FISH1:
         return base * 1.25;
       case BIGGER_FISH2:
@@ -216,23 +195,27 @@ public class FishingModel {
   }
 
   private void updateLure() {
-    if (this.lureDuration > 0) {
-      this.lureDuration--;
+    if (this.getLureDuration() > 0) {
+      this.decreaseLureDuration();
     }
-    if (this.lureDuration == 0) {
-      this.lure = Lure.NO_LURE;
+    if (this.getLureDuration() == 0) {
+      this.setLure(Lure.NO_LURE, 0);
     }
+  }
+
+  private void decreaseLureDuration() {
+    this.state.setLureDuration(this.state.getLureDuration() - 1);
   }
 
   private void updateAlmanac(String name) {
-    this.almanac.get(this.location).get(this.waterType).put(name, true);
+    this.state.updateAlmanac(name);
   }
 
   private long getWaitTime() {
-    int base = 5000 - (this.rodLevel * 50);
+    int base = WAIT_TIME - (this.getRodLevel() * (WAIT_TIME / 100));
     //Random rand = new Random(); TODO: re-add randomization of wait times
     //base -= rand.nextInt(100);
-    switch (this.lure) {
+    switch (this.getLure()) {
       case FASTER_BITES1:
         return Math.round(base * .75);
       case FASTERBITES2:
@@ -246,28 +229,28 @@ public class FishingModel {
 
   
   public Lure getLure() {
-    return this.lure;
+    return this.state.getLure();
   }
 
   
   public int getLureDuration() {
-    return this.lureDuration;
+    return this.state.getLureDuration();
   }
 
   
   public Map<String, Map<Water, Map<String, Boolean>>> getAlmanac() {
-    return this.almanac;
+    return this.state.getAlmanac();
   }
 
   
   public void setLure(Lure lure, int duration) {
-    if (this.lure.equals(lure)) {
-      this.lureDuration += duration;
+    if (this.getLure().equals(lure)) {
+      this.state.setLureDuration(this.getLureDuration() + duration);
     }
     else {
-      this.lureDuration = duration;
+      this.state.setLureDuration(duration);
     }
-    this.lure = lure;
+    this.state.setLure(lure);
   }
 
   
@@ -275,7 +258,7 @@ public class FishingModel {
     Lure[] allLures = Lure.values();
     List<Lure> activeLureOfferings = new ArrayList<>();
     for (Lure l: allLures) {
-      if (l.getRodLevelUnlocked() <= this.rodLevel && l.getRodLevelUnlocked() != 0) {
+      if (l.getRodLevelUnlocked() <= this.getRodLevel() && l.getRodLevelUnlocked() != 0) {
         activeLureOfferings.add(l);
       }
     }
@@ -287,4 +270,12 @@ public class FishingModel {
     return this.fishLocations.getNumSpecies();
   }
 
+  public void saveState(String filename) throws JsonIOException, IOException {
+    JsonObject json = this.state.makeJsonFromState();
+    Gson gson = new Gson();
+    System.out.println(json);
+    Writer writer = new FileWriter(filename + ".json");
+    gson.toJson(json, writer);
+    writer.close();
+  }
 }

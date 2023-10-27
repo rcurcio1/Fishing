@@ -1,8 +1,0 @@
-{
-    "money" : 5000,
-    "rodLevel" : 5,
-    "inventory" : [{"name" : "Lobstah", "weight" : 3.7, "worth" : 250}],
-    "lure" : "BIGGER_FISH1",
-    "lureDuration" : 10,
-    "caught" : ["Lobstah", "Cod"]
-}

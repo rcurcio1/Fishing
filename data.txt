@@ -57,4 +57,9 @@ Lobstah
 Cod
 3 10 5 COMMON
 }
+POND
+{
+Duck
+5 25 1000 COMMON
+}
 }

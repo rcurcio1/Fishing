@@ -98,7 +98,7 @@ public class FishingTextView implements FishingView {
   public void renderGoFishMenu() {
     this.renderMessage(
         "~ ~ ~ ~ ~ " + this.model.getLocation().toUpperCase() + " " +
-            this.model.getWaterType().toString().toUpperCase() + "~ ~ ~ ~ ~\n" +
+            this.model.getWaterType().toString().toUpperCase() + " ~ ~ ~ ~ ~\n" +
             "0. Exit\n" +
             "1. Cast Rod\n" +
             "What would you like to do?");
@@ -119,6 +119,12 @@ public class FishingTextView implements FishingView {
     this.renderMessage("Enter the number of the water type you would like to travel to: ");
   }
 
+  public void renderSaveStateMenu() {
+    this.renderMessage(
+      "~ ~ ~ ~ ~ SAVE ~ ~ ~ ~ ~" + 
+      "Enter the name of the file you would like to save the state under: ");
+  }
+
   @Override
   public void renderMainMenu() {
     this.renderMessage(
@@ -127,6 +133,7 @@ public class FishingTextView implements FishingView {
             "3. Buy new equipment\n" +
             "4. Fish here at a " + this.model.getWaterType().toString().toLowerCase() + " in " + this.model.getLocation() + "\n" +
             "5. View your almanac\n" +
+            "6. Save state\n" +
             "Enter your choice: ");
   }
 
@@ -148,7 +155,11 @@ public class FishingTextView implements FishingView {
         }
       }
     }
-    double percentCaught = numCaught / this.model.getNumCatchableFish();
-    this.renderMessage("PROGRESS: " + (percentCaught * 100) + "%");
+    double percentCaught = this.roundTwoPlaces(numCaught / this.model.getNumCatchableFish());
+    this.renderMessage("PROGRESS: " + (percentCaught) + "%");
+  }
+
+  private double roundTwoPlaces(double d) {
+    return Math.round(d * 10000.0) / 100.0;
   }
 }
