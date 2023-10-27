@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import Json.JsonState;
@@ -140,7 +139,6 @@ public class FishingState {
     }
 
     public JsonObject makeJsonFromState() {
-        Gson gson = new Gson();
         JsonObject json = new JsonObject();
         json.add("money", new JsonPrimitive(this.money));
         json.add("rodLevel", new JsonPrimitive(this.rodLevel));
