@@ -82,21 +82,22 @@ public class FishLocations {
 
     public List<String> getLocations() { return this.locations; }
 
-    public Map<String, Map<Water, Map<String, Boolean>>> makeAlmanac() {
-        Map<String, Map<Water, Map<String, Boolean>>> almanac = new HashMap<>();
+    public Map<String, Map<Water, Map<String, Double>>> makeAlmanac() {
+        Map<String, Map<Water, Map<String, Double>>> almanac = new HashMap<>();
         for (String loc: this.locations) {
-            Map<Water, Map<String, Boolean>> waterMap = new HashMap<>();
+            Map<Water, Map<String, Double>> waterMap = new HashMap<>();
             for (Water water: this.waterLocations.get(loc)) {
-                Map<String, Boolean> speciesMap = new HashMap<>();
+                Map<String, Double> speciesMap = new HashMap<>();
                 for (Species spec : this.speciesLocations.get(loc)) {
                     if (spec.getWaterType() == water) {
-                        speciesMap.put(spec.getSpecies(), false);
+                        speciesMap.put(spec.getSpecies(), -1.0);
                     }
                 }
                 waterMap.put(water, speciesMap);
             }
             almanac.put(loc, waterMap);
         }
+        System.out.println(almanac);
         return almanac;
     }
 

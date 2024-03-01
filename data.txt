@@ -62,4 +62,14 @@ POND
 Duck
 5 25 1000 COMMON
 }
+FENS
+{
+Snake
+1 5 20 COMMON
+}
+FROZEN_LAKE
+{
+Salmon
+5 35 50 RARE
+}
 }

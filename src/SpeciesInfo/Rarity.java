@@ -2,11 +2,11 @@ package SpeciesInfo;
 
 public enum Rarity {
     COMMON(1),
-    UNCOMMON(5),
-    RARE(10),
-    EXOTIC(50),
-    LEGENDARY(100),
-    MYTHIC(500);
+    UNCOMMON(2),
+    RARE(4),
+    EXOTIC(8),
+    LEGENDARY(16),
+    MYTHIC(32);
 
     public int value;
 

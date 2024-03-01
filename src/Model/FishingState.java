@@ -21,7 +21,7 @@ public class FishingState {
     private Water waterType;
     private Lure lure;
     private int lureDuration;
-    private Map<String, Map<Water, Map<String, Boolean>>> almanac;
+    private Map<String, Map<Water, Map<String, Double>>> almanac;
 
     public FishingState(FishLocations fl) {
         this.money = 0;
@@ -45,7 +45,7 @@ public class FishingState {
         this.inventory = new ArrayList<>(this.inventory);
         this.waterType = Water.valueOf(js.waterType);
         this.almanac = fl.makeAlmanac();
-        this.initializeAlmanac(Arrays.asList(js.caught));
+        this.initializeAlmanac(Arrays.asList(js.caught), Arrays.asList((js.weights)));
         this.lure = Lure.valueOf(js.lure);
         this.lureDuration = js.lureDuration;
     }
@@ -106,11 +106,11 @@ public class FishingState {
         this.lureDuration = lureDuration;
     }
 
-    public Map<String, Map<Water, Map<String, Boolean>>> getAlmanac() {
+    public Map<String, Map<Water, Map<String, Double>>> getAlmanac() {
         return almanac;
     }
 
-    public void setAlmanac(Map<String, Map<Water, Map<String, Boolean>>> almanac) {
+    public void setAlmanac(Map<String, Map<Water, Map<String, Double>>> almanac) {
         this.almanac = almanac;
     }
 
@@ -122,16 +122,21 @@ public class FishingState {
         this.inventory.remove(i);
     }
 
-    public void updateAlmanac(String name) {
-        this.almanac.get(this.location).get(this.waterType).put(name, true);
+    public void updateAlmanac(String name, Double weight) {
+        if (weight > this.almanac.get(this.location).get(this.waterType).get(name)) {
+            this.almanac.get(this.location).get(this.waterType).put(name, weight);
+        }
     }
 
-    public void initializeAlmanac(List<String> names) {
+
+    public void initializeAlmanac(List<String> names, List<Double> weights) {
         for (String lkey : this.almanac.keySet()) {
             for (Water wkey : this.almanac.get(lkey).keySet()) {
                 for (String fish : this.almanac.get(lkey).get(wkey).keySet()) {
                     if (names.contains(fish)) {
-                        this.almanac.get(lkey).get(wkey).put(fish, true);
+                        int weightIndex = names.indexOf(fish);
+                        Double weight = weights.get(weightIndex);
+                        this.almanac.get(lkey).get(wkey).put(fish, weight);
                     }
                 }
             }
@@ -145,7 +150,9 @@ public class FishingState {
         json.add("inventory", this.getInventoryJson());
         json.add("lure", new JsonPrimitive(this.lure.toString()));
         json.add("lureDuration", new JsonPrimitive(this.lureDuration));
-        json.add("caught", this.getCaughtFishJson());
+        List<JsonArray> weightAndCaught = this.getCaughtFishJson();
+        json.add("caught", weightAndCaught.get(0));
+        json.add("weights", weightAndCaught.get(1));
         json.add("location", new JsonPrimitive(this.location));
         json.add("waterType", new JsonPrimitive(this.waterType.toString()));
         return json;
@@ -163,17 +170,23 @@ public class FishingState {
         return array;
     }
 
-    private JsonArray getCaughtFishJson() {
+    private List<JsonArray> getCaughtFishJson() {
         JsonArray caught = new JsonArray();
+        JsonArray weights = new JsonArray();
         for (String lkey : this.almanac.keySet()) {
             for (Water wkey : this.almanac.get(lkey).keySet()) {
                 for (String fish : this.almanac.get(lkey).get(wkey).keySet()) {
-                    if (this.almanac.get(lkey).get(wkey).get(fish) == true) {
+                    Double weight = this.almanac.get(lkey).get(wkey).get(fish);
+                    if (weight + 1 > .001) {
                         caught.add(fish);
+                        weights.add(weight);
                     }
                 }
             }
         }
-        return caught;
+        List<JsonArray> ret = new ArrayList<>();
+        ret.add(caught);
+        ret.add(weights);
+        return ret;
     }
 }

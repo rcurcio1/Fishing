@@ -53,6 +53,7 @@ public class FishingControllerImpl implements FishingController {
           break;
         case 6:
           this.saveState(scan);
+          break;
         default:
           this.view.renderMessage("Invalid input.");
           break;

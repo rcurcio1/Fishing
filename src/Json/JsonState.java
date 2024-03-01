@@ -3,6 +3,7 @@ package Json;
 import Model.Fish;
 
 public class JsonState {
+    public Double[] weights;
     public int money;
     public int rodLevel;
     public Fish[] inventory;
@@ -12,8 +13,9 @@ public class JsonState {
     public String location;
     public String waterType;
 
-    public JsonState(int money, int rodLevel, Fish[] inventory, String lure, int lureDuration, String[] caught,
+    public JsonState(Double[] weights, int money, int rodLevel, Fish[] inventory, String lure, int lureDuration, String[] caught,
             String location, String waterType) {
+        this.weights =  weights;
         this.money = money;
         this.rodLevel = rodLevel;
         this.inventory = inventory;

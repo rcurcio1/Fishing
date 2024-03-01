@@ -121,7 +121,7 @@ public class FishingTextView implements FishingView {
 
   public void renderSaveStateMenu() {
     this.renderMessage(
-      "~ ~ ~ ~ ~ SAVE ~ ~ ~ ~ ~" + 
+      "~ ~ ~ ~ ~ SAVE ~ ~ ~ ~ ~\n" + 
       "Enter the name of the file you would like to save the state under: ");
   }
 
@@ -138,15 +138,16 @@ public class FishingTextView implements FishingView {
   }
 
   public void renderAlmanac() {
-    Map<String, Map<Water, Map<String, Boolean>>> almanac = this.model.getAlmanac();
+    Map<String, Map<Water, Map<String, Double>>> almanac = this.model.getAlmanac();
     double numCaught = 0;
     for (String loc : almanac.keySet()) {
       this.renderMessage(loc);
       for (Water water: almanac.get(loc).keySet()) {
         this.renderMessage("    " + water.toString());
         for (String spec: almanac.get(loc).get(water).keySet()) {
-          if (almanac.get(loc).get(water).get(spec)) {
-            this.renderMessage("        " + spec);
+          double weight = almanac.get(loc).get(water).get(spec);
+          if (weight + 1 > .001) {
+            this.renderMessage("        " + spec + ": " + weight);
             numCaught += 1;
           }
           else {

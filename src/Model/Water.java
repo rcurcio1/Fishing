@@ -9,4 +9,6 @@ public enum Water {
   CREEK,
   BAY,
   FROZEN_LAKE,
+  FENS,
+  SWAMP,
 }

@@ -105,7 +105,7 @@ public class FishingModel {
     Random rand = new Random();
     int i = rand.nextInt(options.size());
     Species s = options.get(i);
-    if (rand.nextInt((s.getRarity().value / this.getRarityDivider())) == 0) {
+    if (rand.nextInt(Math.max(s.getRarity().value / this.getRarityDivider(), 1)) == 0) {
       return s;
     }
     else {
@@ -175,7 +175,7 @@ public class FishingModel {
     int cost = (int) Math.round(s.getCost(weight));
     Fish f = new Fish(s.getSpecies(), weight, cost);
     this.updateLure();
-    this.updateAlmanac(f.getName());
+    this.updateAlmanac(f.getName(), f.getWeight());
     return f;
   }
 
@@ -207,8 +207,8 @@ public class FishingModel {
     this.state.setLureDuration(this.state.getLureDuration() - 1);
   }
 
-  private void updateAlmanac(String name) {
-    this.state.updateAlmanac(name);
+  private void updateAlmanac(String name, double weight) {
+    this.state.updateAlmanac(name, weight);
   }
 
   private long getWaitTime() {
@@ -238,7 +238,7 @@ public class FishingModel {
   }
 
   
-  public Map<String, Map<Water, Map<String, Boolean>>> getAlmanac() {
+  public Map<String, Map<Water, Map<String, Double>>> getAlmanac() {
     return this.state.getAlmanac();
   }
 
@@ -273,7 +273,6 @@ public class FishingModel {
   public void saveState(String filename) throws JsonIOException, IOException {
     JsonObject json = this.state.makeJsonFromState();
     Gson gson = new Gson();
-    System.out.println(json);
     Writer writer = new FileWriter(filename + ".json");
     gson.toJson(json, writer);
     writer.close();
