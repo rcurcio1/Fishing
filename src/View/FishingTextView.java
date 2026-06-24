@@ -99,6 +99,7 @@ public class FishingTextView implements FishingView {
     this.renderMessage(
         "~ ~ ~ ~ ~ " + this.model.getLocation().toUpperCase() + " " +
             this.model.getWaterType().toString().toUpperCase() + " ~ ~ ~ ~ ~\n" +
+            "Lure: " + this.model.getLure().getName() + " (" + this.model.getLureDuration() + ")\n" +
             "0. Exit\n" +
             "1. Cast Rod\n" +
             "What would you like to do?");
