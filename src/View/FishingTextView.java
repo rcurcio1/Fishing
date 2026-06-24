@@ -145,7 +145,7 @@ public class FishingTextView implements FishingView {
       for (Water water: almanac.get(loc).keySet()) {
         this.renderMessage("    " + water.toString());
         for (String spec: almanac.get(loc).get(water).keySet()) {
-          double weight = almanac.get(loc).get(water).get(spec);
+          double weight = Math.floor(almanac.get(loc).get(water).get(spec) * 100) / 100;
           if (weight + 1 > .001) {
             this.renderMessage("        " + spec + ": " + weight);
             numCaught += 1;
