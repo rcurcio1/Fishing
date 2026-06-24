@@ -195,10 +195,10 @@ public class FishingModel {
   }
 
   private void updateLure() {
-    if (this.getLureDuration() > 0) {
+    if (this.getLureDuration() > 1) {
       this.decreaseLureDuration();
     }
-    if (this.getLureDuration() == 0) {
+    else {
       this.setLure(Lure.NO_LURE, 0);
     }
   }
